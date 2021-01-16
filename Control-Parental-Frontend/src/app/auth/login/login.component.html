@@ -1,0 +1,19 @@
+<!-- Default form subscription -->
+<form class="text-center border border-light p-5" [formGroup]="loginForm" (ngSubmit)="authentification()">
+
+    <p class="h4 mb-4">Connexion</p>
+  
+    <p>Veuillez renseigner vos parametres de connexion.</p>
+  
+    <!-- Name -->
+    <input type="email" class="form-control mb-4" name="email" formControlName="email" placeholder="E-mail">
+  
+    <!-- Email -->
+    <input type="password"  class="form-control mb-4" name="password" formControlName="password" placeholder="Password">
+  
+    <!-- Sign in button -->
+    <button class="btn btn-success" type="submit" [disabled]="loginForm.invalid">Sign in</button>
+  
+  
+  </form>
+  <!-- Default form subscription -->

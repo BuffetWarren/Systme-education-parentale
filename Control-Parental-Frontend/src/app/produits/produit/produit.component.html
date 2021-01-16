@@ -1,0 +1,17 @@
+<table class="table">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Libellé</th>
+            <th>Prix unitaire</th>
+        </tr>
+    </thead>
+    <tbody>
+        
+        <tr *ngFor="let produit of produits?.data">
+            <td>{{produit.id}}</td>
+            <td>{{produit.libelle}}</td>
+            <td>{{produit.prix_u}}</td>
+        </tr>
+    </tbody>
+</table>
