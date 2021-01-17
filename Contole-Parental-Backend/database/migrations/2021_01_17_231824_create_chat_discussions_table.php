@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateProduitsTable extends Migration
+class CreateChatDiscussionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,12 @@ class CreateProduitsTable extends Migration
      */
     public function up()
     {
-        Schema::create('produits', function (Blueprint $table) {
-            $table->increments("id");
-            $table->string('libelle');
-            $table->double('prix_u');
-            
+        Schema::create('chat_discussions', function (Blueprint $table) {
+            $table->increments('id');
+            $table->unsignedInteger('user1_id');
+            $table->unsignedInteger('user2_id');
+            $table->string('file')->nullable();
+            $table->string('last_message');
             $table->timestamps();
         });
     }
@@ -29,6 +30,6 @@ class CreateProduitsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('produits');
+        Schema::dropIfExists('chat_discussions');
     }
 }

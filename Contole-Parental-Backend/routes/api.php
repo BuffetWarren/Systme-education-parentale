@@ -14,72 +14,29 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::group(['prefix' => 'auth'], function () {
+
+    Route::post('token', 'AuthController@login');
+    Route::post('signin','UserController@store');
+    Route::group(['middleware' => 'auth:api'], function () {
+        Route::get('user', 'AuthController@user');
+        Route::delete('token', 'AuthController@logout');
+   });
+
 });
 
-    Route::group(['prefix' => 'users'], function () {
-        Route::get('/', 'UsersControllers@index');
-        Route::post('/', 'UsersControllers@store');
-        Route::get('/{id}', 'UsersControllers@show');
-        Route::delete('/{id}', 'UsersControllers@destroy');
-        Route::post('/{id}', 'UsersControllers@update');
-        Route::get('/role/role', 'RoleUserController@getRoleByUser');
+Route::group(['prefix' => 'users'],function(){
+    Route::get('/{id}','UserController@show');
+});
 
+Route::group(['middleware' => 'auth:api'],function(){
+    Route::group(['prefix' => 'chats'], function () {
+        Route::post('', 'ChatController@newMessage');
+        Route::get('/discussion/{id}', 'ChatController@discussionMessage');
+        Route::get('/discussion/{id}/newmessages', 'ChatController@getNewMessages');
+        Route::delete('/discussion/{id}', 'ChatController@deleteDiscussion');
+        Route::delete('/{id}', 'ChatController@deleteMessage');
+        Route::get('/discussions/{id}', 'ChatController@getDiscussions');
+    });
     
-    });
-    Route::group(['prefix' => 'teams'], function () {
-        Route::get('/', 'TeamsController@index');
-        Route::post('/', 'TeamsController@store');
-        Route::get('/{id}', 'TeamsController@show');
-        Route::delete('/{id}', 'TeamsController@destroy');
-        Route::post('/{id}', 'TeamsController@update');
-    
-    });
-    Route::group(['prefix' => 'assign'], function () {
-        Route::post('/', 'RolesController@test');
-    });
-    Route::group(['prefix' => 'roles'], function () {
-        Route::get('/', 'RolesController@getRoles');
-        Route::get('/permissions', 'RolesController@getPermissions');
-        Route::post('/', 'RolesController@createRole');
-        Route::post('/', 'RoleController@store');
-        Route::post('/permissions', 'RolesController@createPermission');
-        Route::get('/{id}', 'RolesController@findRole');
-        Route::get('/permission/{id}', 'RolesController@findfindPermission');
-        Route::delete('/{id}', 'RolesController@destroyRole');
-        Route::delete('/permission/{id}', 'RolesController@destroyPermission');
-        Route::post('/{id}', 'RolesController@updateRole');
-        Route::post('/permission/{id}', 'RolesController@updatePermission');
-        Route::post('/attachtoRole/{rid}/{pid}', 'RolesController@attachPermissionToRole');
-        Route::match(['post', 'put'], '/sync_user_abilities/{id}', 'RolesController@syncAbilities');
-    
-    });
-
-    /** Routes pour le Module de gestion de produit */
-
-    /*Client*/
-    Route::group(['prefix' => 'clients'], function () {
-        Route::get('/', 'ClientController@index');
-        Route::post('/', 'ClientController@store');
-        Route::get('/{id}', 'ClientController@show');
-        Route::match(['post', 'put'],'/{id}', 'ClientController@update');
-        Route::delete('/{id}', 'ClientController@destroy');
-
-    });
-
-    /* Produit */
-    Route::group(['prefix' => 'produits'], function () {
-        Route::get('/', 'ProduitController@index');
-        Route::post('/', 'ProduitController@store');
-        Route::get('/{id}', 'ProduitController@show');
-        Route::match(['post', 'put'],'/{id}', 'ProduitController@update');
-        Route::delete('/{id}', 'ProduitController@destroy');
-
-    });
-
-    Route::group(['prefix' => 'commandes'], function () {
-        Route::get('/{id}', 'CommandeController@getProductByClient');
-        Route::get('/', 'CommandeController@getClientBuy');
-
-    });
+});
